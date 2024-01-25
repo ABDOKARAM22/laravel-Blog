@@ -57,10 +57,15 @@ class PostController extends Controller
         return view('blog.show')->with('post',Post::where('slug',$slug)->first());
         
     }
-    
+        
     public function edit(string $slug)
     {
-        return view('blog.edit')->with('post',Post::where('slug',$slug)->first());
+        $data = Post::where('slug',$slug)->first();
+        if(Auth::check() && Auth::user()->id == $data->user_id ){
+            return view('blog.edit')->with('post',$data);
+        }else{
+            abort(404);
+        }
     }
 
     public function update(Request $request, string $slug)
